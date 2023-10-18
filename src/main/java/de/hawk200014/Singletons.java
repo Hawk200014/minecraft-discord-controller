@@ -7,7 +7,7 @@ public class Singletons {
     public static Singletons getInstance(){
         return singletons;
     }
-    private HashMap<Object, String> singletonObjects;
+    private final HashMap<Object, String> singletonObjects;
 
     public Singletons(){
         singletonObjects = new HashMap<>();
