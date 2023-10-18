@@ -1,5 +1,6 @@
 package de.hawk200014;
 
+import de.hawk200014.ServerList.ServerList;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -7,7 +8,7 @@ import net.dv8tion.jda.api.entities.Activity;
 public class Main {
     public static void main(String[] args) {
         if(args.length == 2) {
-            initSingletons(args[1]);
+            initSingletons(args[1], "serverlist.txt");
             initDiscord(args[0]);
             initApi();
         }
@@ -37,9 +38,10 @@ public class Main {
         spark.Spark.post("/api", (request, response) -> ((RequestProcessor) Singletons.getInstance().getSingleton("requestprocessor")).processData(request, response));
     }
 
-    public static void initSingletons(String apiSecret) {
+    public static void initSingletons(String apiSecret, String filepath) {
         new Singletons().addSingleton(new RequestProcessor(), "requestprocessor");
         Singletons.getInstance().addSingleton(apiSecret, "apisecret");
+        Singletons.getInstance().addSingleton(new ServerList(filepath), "serverlist");
     }
 
 }
