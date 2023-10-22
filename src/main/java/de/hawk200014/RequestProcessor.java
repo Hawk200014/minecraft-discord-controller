@@ -2,45 +2,33 @@ package de.hawk200014;
 import de.hawk200014.ServerList.ServerList;
 import de.hawk200014.ServerList.ServerModel;
 import org.json.JSONObject;
-import org.json.JSONArray;
-import spark.Request;
-import spark.Response;
-
 public class RequestProcessor {
 
-    public Response processData(Request request, Response response){
-        String body = request.body();
+    public void processData(String body){
         JSONObject jObject = new JSONObject(body);
         JSONObject dataJson = null;
         try {
             String apisecret = jObject.getJSONObject("auth").getString("apisecret");
             if(!((String)Singletons.getInstance().getSingleton("apisecret")).equals(apisecret)){
-                response.status(400);
-                return response;
             }
             dataJson = jObject.getJSONObject("data");
         }
         catch (Exception e){
-            response.status(400);
-            return response;
+            System.out.println(e.getMessage());
         }
-
         try{
             String method = dataJson.getString("method");
             switch (method){
                 case "newPoint":
-                    response.status(processNewPoint(dataJson));
+                    System.out.println(processNewPoint(dataJson));
                     break;
                 default:
-                    response.status(500);
-                    return response;
+                    System.out.println(500);
             }
         }
         catch (Exception e){
-            response.status(500);
-            return response;
+            System.out.println(500);
         }
-        return response;
     }
 
     private int processNewPoint(JSONObject jsonObject){

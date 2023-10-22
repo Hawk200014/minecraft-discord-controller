@@ -35,7 +35,7 @@ public class Main {
     }
 
     public static void initApi() {
-        spark.Spark.post("/api", (request, response) -> ((RequestProcessor) Singletons.getInstance().getSingleton("requestprocessor")).processData(request, response));
+
     }
 
     public static void initSingletons(String apiSecret, String filepath) {
