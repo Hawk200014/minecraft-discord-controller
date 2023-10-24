@@ -1,14 +1,20 @@
 package de.hawk200014;
 
-import de.hawk200014.ServerList.ServerList;
+import de.hawk200014.Socket.ClientHandler;
+import de.hawk200014.Socket.ServerSocketManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 
+import java.net.ServerSocket;
+
 public class Main {
+    public static String secret;
+    public static JDA jda;
     public static void main(String[] args) {
+        long guildid = 0;
         if(args.length == 2) {
-            initSingletons(args[1], "serverlist.txt");
+            initSingletons(args[1], "serverlist.txt", guildid);
             initDiscord(args[0]);
             initApi();
         }
@@ -25,23 +31,34 @@ public class Main {
         // Set activity (like "playing Something")
         builder.setActivity(Activity.watching("Minecraft Servers"));
 
-        JDA jda = builder.build();
+        Main.jda = builder.build();
         try {
             jda.awaitReady();
-        }
-        catch (Exception e){
+        } catch (Exception e){
+            e.printStackTrace();
             System.exit(-1);
         }
+
     }
 
     public static void initApi() {
-
+        try {
+            ServerSocketManager serverSocketManager = new ServerSocketManager(new ServerSocket(35565));
+            Thread thread = new Thread(serverSocketManager);
+            thread.start();
+        } catch (Exception e){
+            e.printStackTrace();
+            System.exit(-2);
+        }
     }
 
-    public static void initSingletons(String apiSecret, String filepath) {
-        new Singletons().addSingleton(new RequestProcessor(), "requestprocessor");
-        Singletons.getInstance().addSingleton(apiSecret, "apisecret");
-        Singletons.getInstance().addSingleton(new ServerList(filepath), "serverlist");
+    public static void initSingletons(String socketSecret, String filepath, long guildID) {
+        RequestProcessor rp = new RequestProcessor();
+        ClientHandler.rp = rp;
+        new Singletons().addSingleton(rp, "requestprocessor");
+        Main.secret = socketSecret;
+        Singletons.getInstance().addSingleton(socketSecret, "apisecret");
+        Singletons.getInstance().addSingleton(guildID, "guidid");
     }
 
 }
