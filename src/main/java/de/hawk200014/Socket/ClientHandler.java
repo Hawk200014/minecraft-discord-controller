@@ -56,7 +56,7 @@ public class ClientHandler implements Runnable{
                 bufferedReader.close();
             }
             if(bufferedWriter != null){
-                bufferedReader.close();
+                bufferedWriter.close();
             }
             if(socket != null){
                 socket.close();
@@ -65,5 +65,30 @@ public class ClientHandler implements Runnable{
             e.printStackTrace();
         }
         System.out.println("Servernode " + this.clientName + " has disconnected");
+    }
+
+    public void broadcastMessage(String message){
+        for (ClientHandler clientHandler : clientHandlers) {
+            clientHandler.sendMessage(message);
+        }
+    }
+
+    public void sendMessage(String message){
+        try{
+            bufferedWriter.write(message);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch (IOException e){
+            closeEverything(this.socket, this.bufferedReader, this.bufferedWriter);
+        }
+    }
+
+    public void sendMessageToSpecificClient(String servername, String message){
+        for (ClientHandler clientHandler : clientHandlers) {
+            if(clientHandler.clientName.equals(servername)){
+                clientHandler.sendMessage(message);
+                break;
+            }
+        }
     }
 }
