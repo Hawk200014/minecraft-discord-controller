@@ -20,16 +20,14 @@ public class RequestProcessor {
                     if(textChannel == null) return;
                     if(data.length == 2 && !data[1].trim().isEmpty())
                         textChannel.sendMessage(data[1].trim()).queue();
+                    break;
                 default:
                     System.out.println(500);
+                    break;
             }
         }
         catch (Exception e){
             System.out.println(500);
         }
     }
-
-
-
-
 }
