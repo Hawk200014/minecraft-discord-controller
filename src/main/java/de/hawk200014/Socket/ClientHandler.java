@@ -11,7 +11,7 @@ public class ClientHandler implements Runnable{
     public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     public static RequestProcessor rp;
     private Socket socket;
-    private BufferedWriter bufferedWriter;
+    private BufferedWriter bufferedWriter; //dasd
     private BufferedReader bufferedReader;
     private String clientName;
 
